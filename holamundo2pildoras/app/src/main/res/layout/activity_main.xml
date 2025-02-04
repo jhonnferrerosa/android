@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="277dp"
+            android:background="#9ADA03"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/miEtiqueta1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="introduzca su edad en anos:" />
+
+            <EditText
+                android:id="@+id/miCampoEdad"
+                android:layout_width="match_parent"
+                android:layout_height="69dp"
+                android:ems="10"
+                android:inputType="text"
+                android:text="0" />
+
+            <Button
+                android:id="@+id/miBoton"
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                android:text="aceptar edad" />
+
+            <TextView
+                android:id="@+id/miEtiqueta2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="esta es su edad en meses:" />
+
+            <TextView
+                android:id="@+id/miCampoRespuesta"
+                android:layout_width="match_parent"
+                android:layout_height="29dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/miBotonSumar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="+" />
+
+                <Button
+                    android:id="@+id/miBotonRestar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="-" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="183dp"
+            android:background="@color/design_default_color_secondary"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/miEtiqueta3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="escrba su numero a acerta:" />
+
+            <EditText
+                android:id="@+id/miCampoAleatorio"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:text="0" />
+
+            <Button
+                android:id="@+id/miBotonProbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="probar" />
+
+            <TextView
+                android:id="@+id/miEtiqueta4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="escriba para empezar, cantidad de intentos: " />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EC68B1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/miEtiqueta5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="escriba el numero que desea calcular primos: " />
+
+            <EditText
+                android:id="@+id/miCampoPrimo"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:ems="10"
+                android:inputType="text"
+                android:text="0" />
+
+            <Button
+                android:id="@+id/miBotonPrimo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="calcular" />
+
+            <TextView
+                android:id="@+id/miEtiqueta6"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="cantidad de primos: " />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/miBotonLlamaFuncion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="imprimirMensajePrueba"
+            android:text="pulsaLlamaFuncion" />
+
+        <TextView
+            android:id="@+id/salidaLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="salidaLog" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
