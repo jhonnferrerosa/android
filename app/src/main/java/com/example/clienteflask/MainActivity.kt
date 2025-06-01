@@ -28,6 +28,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URL
 
+//jhonjames: borrar este comentario. 
+
 object VariableGlobal{
     var miRespuestaJSON : FlaskResponse? = null;
     lateinit var miDominioDelaWeb : String;
