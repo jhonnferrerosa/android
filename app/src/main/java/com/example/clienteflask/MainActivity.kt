@@ -14,12 +14,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.clienteflask.VariableGlobal.miRespuestaJSON
 import com.example.clienteflask.VariableGlobal.miDominioDelaWeb
+import com.example.clienteflask.VariableGlobal.miOkHttpClientQucContieneLaCoockie
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -29,6 +31,7 @@ import java.net.URL
 object VariableGlobal{
     var miRespuestaJSON : FlaskResponse? = null;
     lateinit var miDominioDelaWeb : String;
+    var miOkHttpClientQucContieneLaCoockie : OkHttpClient? = null;
 }
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var miTextView1direccionIP : TextView;
     lateinit var miButton2accederAlEvento : Button;
     lateinit  var direccionURL : String;
+    lateinit var miTextView3MensajeAviso : TextView;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +56,13 @@ class MainActivity : AppCompatActivity() {
         miTextView1direccionIP = findViewById(R.id.textView1direccionIP);
         miButton2accederAlEvento = findViewById(R.id.button2accederAlEvento);
         miButton2accederAlEvento.isEnabled  = false;
+        miTextView3MensajeAviso = findViewById(R.id.textView3MensajeAviso);
 
         miButton1leerCodigoQR.setOnClickListener(){
             println("miButton1leerCodigoQR.setOnClickListener()--- empieza el escaneo. ");
             //scanearCodigo();
-            miTextView1direccionIP.setText("http://192.168.183.64:5000/demostracionesroboticas/miQR1/");
-            direccionURL = "http://192.168.183.64:5000/demostracionesroboticas/miQR1/";
+            miTextView1direccionIP.setText("http://192.168.1.129:5000/demostracionesroboticas/miQR1/");
+            direccionURL = "http://192.168.1.129:5000/demostracionesroboticas/miQR1/";
             miButton2accederAlEvento.isEnabled  = true;
             println("miButton1leerCodigoQR.setOnClickListener()--- fin del escaneo. ");
         }
@@ -96,12 +101,16 @@ class MainActivity : AppCompatActivity() {
     }
     fun buscarInternet(url: String) {
         println("buscarInternet()--- se ejecuta con la URL: $url")
-
         println("buscarInternet()--- se ejecuta con la URL: "+ url.substringBeforeLast("/"));
+
+        val okHttpClient = OkHttpClient.Builder()
+            .cookieJar(PersistentCookieJar())
+            .build()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(url) // Se toma solo la parte base
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
 
         runBlocking {
@@ -122,12 +131,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (miRespuestaJSON != null) {
+            println ("MainActivity, buscarInternet()--- aquí voy a imprimir la coockie. ");
+            println (okHttpClient.cookieJar.toString());
+            miOkHttpClientQucContieneLaCoockie = okHttpClient;
             println(miRespuestaJSON!!.estado.toString())
             if (miRespuestaJSON!!.estado.toString() == "Robot Listo"){
                 val miIntent = Intent(this, MainActivity2::class.java)
                 startActivity(miIntent)
+            }else if (miRespuestaJSON!!.estado.toString().startsWith("Esperando por un robot, tiempo de espera para el proximo")) {
+                miTextView3MensajeAviso.setText(miRespuestaJSON!!.estado.toString());
             } else {
-                println("buscarInternet()--- esperando robot.")
+                println("buscarInternet()--- ha ocurrido un error inesperado. ")
             }
         } else {
             println("buscarInternet()--- el JSON ha sido NULL.")

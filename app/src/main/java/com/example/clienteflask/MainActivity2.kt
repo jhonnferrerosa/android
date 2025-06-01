@@ -1,5 +1,6 @@
 package com.example.clienteflask
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -13,8 +14,10 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.clienteflask.VariableGlobal.miRespuestaJSON
 import com.example.clienteflask.VariableGlobal.miDominioDelaWeb
 import android.util.Base64
+import com.example.clienteflask.VariableGlobal.miOkHttpClientQucContieneLaCoockie
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -66,7 +69,7 @@ class MainActivity2 : AppCompatActivity() {
         miButtonAceptar = findViewById(R.id.buttonAceptar);
         miButtonAceptar.setOnClickListener(){
             println ("miButtonAceptar.setOnClickListener()---  ");
-            miDominioDelaWeb = "http://192.168.183.64:5000/aceptarrobot/"
+            miDominioDelaWeb = "http://192.168.1.129:5000/aceptarrobot/"
             println(miDominioDelaWeb);
             buscarInternetAceptarRobot (miDominioDelaWeb);
         }
@@ -92,15 +95,20 @@ class MainActivity2 : AppCompatActivity() {
         println("buscarInternetAceptarRobot()--- se ejecuta con la URL: " + url.substringBeforeLast("/"));
 
 
+
         val retrofit = Retrofit.Builder()
             .baseUrl(url) // Se toma solo la parte base
             .addConverterFactory(GsonConverterFactory.create())
+            .client(miOkHttpClientQucContieneLaCoockie)
             .build()
 
         val miPeticion = PeticionBody (
-            miParametroCodigoQR = miRespuestaJSON?.nombreEvento.toString(),
-            miParametroCorreoElectronicoDelAdministrador = miRespuestaJSON?.correoAdministrador.toString(),
-            miParametroIdRobot = miRespuestaJSON?.idRobot.toString()
+            //miParametroCodigoQR = miRespuestaJSON?.nombreEvento.toString(),
+            //miParametroCorreoElectronicoDelAdministrador = miRespuestaJSON?.correoAdministrador.toString(),
+            //miParametroIdRobot = miRespuestaJSON?.idRobot.toString()
+            miParametroCodigoQR = "miQR1",
+            miParametroCorreoElectronicoDelAdministrador = "holaSoyElCorreoElectronicoDelAdmin",
+            miParametroIdRobot = 101
         )
 
         println ("buscarInternetAceptarRobot()--- Json enviado: " + Gson().toJson(miPeticion));
@@ -111,8 +119,7 @@ class MainActivity2 : AppCompatActivity() {
         runBlocking {
             try{
                 val apiService = retrofit.create(APIservicio::class.java)
-                val response = apiService.funcion_aceptarRobot(url.substringBeforeLast("/"), miPeticion, miRespuestaJSON?.csrfToken.toString());
-
+                val response = apiService.funcion_aceptarRobot(csrfToken = miRespuestaJSON?.csrfToken.toString(), url = url.substringBeforeLast("/"), peticionBody =  miPeticion);
                 if (response.isSuccessful){
                     miRespuestaJSON = response.body();
                     println("buscarInternetAceptarRobot()--- mensaje recibido");
@@ -130,6 +137,13 @@ class MainActivity2 : AppCompatActivity() {
 
         if (miRespuestaJSON != null){
             println("buscarInternetAceptarRobot()--- sí que se ha obtenido respuesta del servidor. ");
+            if (miRespuestaJSON!!.estado.toString() == "Robot manejando") {
+                val miIntent = Intent(this, MainActivity3::class.java);
+                startActivity(miIntent);
+            }else{
+                println ("buscarInternetAceptarRobot()--- no ha robots. ");
+            }
+
         }else{
             println ("buscarInternetAceptarRobot()--- No se ha obtenido respuesta en el POST. ");
         }

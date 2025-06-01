@@ -14,14 +14,12 @@ interface APIservicio {
     @GET
     suspend fun funcion_registrarse(@Url url: String): Response<FlaskResponse>
 
-
     @POST
     suspend fun funcion_aceptarRobot(
+        @Header("X-CSRFToken") csrfToken: String,
         @Url url: String,
-        @Body peticionBody: PeticionBody,
-        @Header("X-CSRF-Token") miParametroCSRFtoken: String
+        @Body peticionBody: PeticionBody
     ): Response<FlaskResponse>
-
 }
 
 
